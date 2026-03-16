@@ -950,11 +950,22 @@ function addAIMessage(html, mcqData = null, revealData = null) {
   if (revealData) {
     if (Array.isArray(revealData)) {
       const titles = ["L'Évidence", "L'Alternative Subtile", "L'Alternative Audacieuse"];
-      extra = `<div class="reveal-container" style="display:flex;flex-direction:column;gap:32px;margin-top:24px;">` + 
-        revealData.map((d, i) => {
-          const titleHtml = `<div style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--g2);margin-bottom:-8px;font-style:italic; animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: ${0.2 + i * 0.2}s">${titles[i] || 'Autre suggestion'}</div>`;
-          return `<div>${titleHtml}${buildRevealCard(d, i)}</div>`;
-        }).join('') + `</div>`;
+      const cardsHtml = revealData.map((d, i) => {
+        const titleHtml = `<div style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--g2);margin-bottom:-8px;font-style:italic; animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: ${0.2 + i * 0.2}s">${titles[i] || 'Autre suggestion'}</div>`;
+        return `<div>${titleHtml}${buildRevealCard(d, i)}</div>`;
+      }).join('');
+      
+      extra = `
+        <div class="results-summary" style="margin-top:24px; text-align:center; padding: 24px; background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.3); border-radius: 16px; cursor: pointer; transition: all 0.3s ease;">
+          <div style="font-size: 32px; margin-bottom: 12px;">✨</div>
+          <h3 style="font-family:'Cormorant Garamond',serif; font-size: 24px; color: var(--g); margin-bottom: 8px;">Votre Profil Olfactif est prêt</h3>
+          <p style="color: rgba(255,255,255,0.8); font-size: 15px; margin-bottom: 20px;">J'ai sélectionné <strong>${revealData.length} parfums</strong> qui correspondent parfaitement à votre essence.</p>
+          <button class="btn-more" style="width: 100%; margin: 0; background: var(--g); color: #000; border: none; font-weight: 600;">Découvrir mes recommandations</button>
+        </div>
+        <div class="reveal-container" style="display:none; flex-direction:column; gap:32px; margin-top:24px;">
+          ${cardsHtml}
+        </div>
+      `;
     } else {
       extra = buildRevealCard(revealData, 0);
     }
@@ -963,6 +974,20 @@ function addAIMessage(html, mcqData = null, revealData = null) {
   wrap.innerHTML = `${avatar}<div>${bubble}${extra}</div>`;
   chatArea.appendChild(wrap);
   
+  if (revealData && Array.isArray(revealData)) {
+    const summaryEl = wrap.querySelector('.results-summary');
+    const containerEl = wrap.querySelector('.reveal-container');
+    if (summaryEl && containerEl) {
+      summaryEl.addEventListener('click', () => {
+        summaryEl.style.display = 'none';
+        containerEl.style.display = 'flex';
+        setTimeout(() => {
+          containerEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 50);
+      });
+    }
+  }
+
   // Attach event listeners for dynamically created buttons
   if (mcqData) {
     const choiceCards = wrap.querySelectorAll('.choice-card');
