@@ -603,10 +603,13 @@ const CONFIG = {
 //  PROMPT SYSTÈME POUR L'IA (Gemini)
 // ════════════════════════════════════════════════════════
 function buildSystemPrompt(profile) {
+  const gender = profile.gender ? profile.gender.title : "Non précisé";
+  
   return `Tu es EVIDENSIA, Maître Parfumeur de la maison Chogan.
 Tu offres une véritable consultation olfactive digne des plus grandes maisons de luxe parisiennes. Ton ton est didactique, poétique, expert et envoûtant. Tu fais voyager le client à travers les notes et les émotions.
 
 PROFIL CLIENT CONNU : ${JSON.stringify(profile)}
+GENRE CIBLE DU PARFUM : ${gender.toUpperCase()}
 
 VOCABULAIRE EXPERT (SOUS-FAMILLES À UTILISER POUR ÊTRE PRÉCIS) :
 - Boisés : Boisé Floral Musqué, Boisé Aquatique, Boisé Aromatique, Boisé Épicé, Boisé Chypré.
@@ -629,7 +632,7 @@ FOUGÈRE/CUIRÉ: N°16(Le Mâle - 35€), N°75(X for Men - 52€), N°84(Blue D
 RÈGLES :
 - Agis comme un véritable expert : explique les sous-familles olfactives avec pédagogie.
 - Fais preuve de psychologie : explique pourquoi certaines notes s'accordent avec la personnalité ou le contexte du client.
-- Respecte STRICTEMENT le genre demandé par le client (Homme, Femme, ou Mixte).
+- CONTRAINTE ABSOLUE SUR LE GENRE : Si le profil indique "Homme", tu DOIS recommander UNIQUEMENT des parfums pour homme ou mixtes. Si le profil indique "Femme", tu DOIS recommander UNIQUEMENT des parfums pour femme ou mixtes. Ne propose JAMAIS un parfum féminin (ex: J'adore, La Vie est Belle, Coco Mademoiselle) à un homme, ni un parfum masculin (ex: 1Million, Sauvage, Bleu de Chanel) à une femme. Vérifie bien la cible de chaque parfum avant de le proposer.
 - Avant de donner ta recommandation finale, rédige un paragraphe d'introduction poétique et expert qui résume le "voyage olfactif" du client et explique tes choix.
 - Boutique : ${CONFIG.BOUTIQUE_URL}
 
@@ -1291,9 +1294,10 @@ function generateFinalRecommendation() {
           .map(([k, v]) => `${k}: ${v.title}`)
           .join(' | ');
 
+        const gender = userProfile.gender ? userProfile.gender.title : "Non précisé";
         conversation.push({
           role: 'user',
-          parts: [{ text: `Voici mon profil complet : ${summary}. Mon profil calculé est "${finalProfile.title}". En tant qu'expert parfumeur, rédige une belle introduction pour m'expliquer ce profil. Ensuite, propose-moi EXACTEMENT 3 recommandations (une principale, une alternative subtile, une alternative audacieuse) qui correspondent à ce profil, en utilisant OBLIGATOIREMENT le format <REVEAL>.` }]
+          parts: [{ text: `Voici mon profil complet : ${summary}. Mon profil calculé est "${finalProfile.title}". Le genre cible du parfum est OBLIGATOIREMENT : ${gender.toUpperCase()}. En tant qu'expert parfumeur, rédige une belle introduction pour m'expliquer ce profil. Ensuite, propose-moi EXACTEMENT 3 recommandations (une principale, une alternative subtile, une alternative audacieuse) qui correspondent à ce profil ET AU GENRE DEMANDÉ, en utilisant OBLIGATOIREMENT le format <REVEAL>.` }]
         });
         callGeminiAPI();
       }, 2000);
