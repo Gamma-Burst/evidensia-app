@@ -915,7 +915,16 @@ const intros = {
 const chatArea = document.getElementById('chatArea');
 
 function scrollBottom() {
-  setTimeout(() => chatArea.scrollTop = chatArea.scrollHeight, 60);
+  const doScroll = () => {
+    chatArea.scrollTo({
+      top: chatArea.scrollHeight,
+      behavior: 'smooth'
+    });
+  };
+  // Scroll immediately, then again after animations finish
+  setTimeout(doScroll, 50);
+  setTimeout(doScroll, 400);
+  setTimeout(doScroll, 900);
 }
 
 function formatText(txt) {
