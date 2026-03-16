@@ -457,9 +457,9 @@ html {
 }
 
 /* ══════════════════════════════
-   BOUTON FLOTTANT AMANDINE
+   BOUTON FLOTTANT CONTACT
 ══════════════════════════════ */
-.fab-amandine{
+.fab-contact{
   position:fixed;bottom:96px;right:16px;z-index:10;
   background:linear-gradient(135deg,var(--g),var(--g2));
   border:none;border-radius:22px;
@@ -470,7 +470,7 @@ html {
   box-shadow:0 4px 18px rgba(201,168,76,.3);
   transition:all .2s;letter-spacing:.04em;
 }
-.fab-amandine:hover{
+.fab-contact:hover{
   transform:translateY(-3px);
   box-shadow:0 8px 26px rgba(201,168,76,.45);
 }
@@ -536,7 +536,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 
   <div class="logo-text">Evidensia</div>
-  <div class="logo-sub">Votre nez numérique — Chogan by Amandine Lopes</div>
+  <div class="logo-sub">Votre nez numérique — Chogan</div>
   <div class="logo-line"></div>
 
   <!-- Barre de progression 15 étapes -->
@@ -554,11 +554,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="chat-area" id="chatArea"></div>
 
 <!-- ══════════════════════════════
-     BOUTON FLOTTANT AMANDINE
+     BOUTON FLOTTANT CONTACT
 ══════════════════════════════ -->
-<button class="fab-amandine" id="btn-amandine">
+<button class="fab-contact" id="btn-contact">
   <span class="online-pulse"></span>
-  Parler à Amandine
+  Nous contacter
 </button>
 
 <!-- ══════════════════════════════
@@ -603,7 +603,7 @@ const CONFIG = {
 //  PROMPT SYSTÈME POUR L'IA (Gemini)
 // ════════════════════════════════════════════════════════
 function buildSystemPrompt(profile) {
-  return `Tu es EVIDENSIA, Maître Parfumeur de la maison Chogan pour Amandine Lopes.
+  return `Tu es EVIDENSIA, Maître Parfumeur de la maison Chogan.
 Tu offres une véritable consultation olfactive digne des plus grandes maisons de luxe parisiennes. Ton ton est didactique, poétique, expert et envoûtant. Tu fais voyager le client à travers les notes et les émotions.
 
 PROFIL CLIENT CONNU : ${JSON.stringify(profile)}
@@ -950,10 +950,27 @@ function addAIMessage(html, mcqData = null, revealData = null) {
   if (revealData) {
     if (Array.isArray(revealData)) {
       const titles = ["L'Évidence", "L'Alternative Subtile", "L'Alternative Audacieuse"];
-      const cardsHtml = revealData.map((d, i) => {
-        const titleHtml = `<div style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--g2);margin-bottom:-8px;font-style:italic; animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: ${0.2 + i * 0.2}s">${titles[i] || 'Autre suggestion'}</div>`;
-        return `<div>${titleHtml}${buildRevealCard(d, i)}</div>`;
-      }).join('');
+      
+      const tabsHtml = `
+        <div class="tabs-container" style="display:flex; gap:8px; margin-bottom:16px; overflow-x:auto; padding-bottom:4px;">
+          ${revealData.map((d, i) => `
+            <button class="tab-btn" data-index="${i}" style="flex:1; padding:10px 16px; border-radius:12px; border:1px solid var(--g); background:${i === 0 ? 'var(--g)' : 'transparent'}; color:${i === 0 ? '#000' : 'var(--g)'}; font-weight:600; font-size:14px; white-space:nowrap; cursor:pointer; transition:all 0.3s;">
+              Réf. ${d.n}
+            </button>
+          `).join('')}
+        </div>
+      `;
+
+      const contentsHtml = `
+        <div class="tab-contents">
+          ${revealData.map((d, i) => `
+            <div class="tab-content" data-index="${i}" style="display:${i === 0 ? 'block' : 'none'}; animation: fadeUp 0.4s ease forwards;">
+              <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--g2);margin-bottom:12px;font-style:italic;text-align:center;">${titles[i] || 'Autre suggestion'}</div>
+              ${buildRevealCard(d, 0)}
+            </div>
+          `).join('')}
+        </div>
+      `;
       
       extra = `
         <div class="results-summary" style="margin-top:24px; text-align:center; padding: 24px; background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.3); border-radius: 16px; cursor: pointer; transition: all 0.3s ease;">
@@ -962,8 +979,9 @@ function addAIMessage(html, mcqData = null, revealData = null) {
           <p style="color: rgba(255,255,255,0.8); font-size: 15px; margin-bottom: 20px;">J'ai sélectionné <strong>${revealData.length} parfums</strong> qui correspondent parfaitement à votre essence.</p>
           <button class="btn-more" style="width: 100%; margin: 0; background: var(--g); color: #000; border: none; font-weight: 600;">Découvrir mes recommandations</button>
         </div>
-        <div class="reveal-container" style="display:none; flex-direction:column; gap:32px; margin-top:24px;">
-          ${cardsHtml}
+        <div class="reveal-container" style="display:none; flex-direction:column; margin-top:24px;">
+          ${tabsHtml}
+          ${contentsHtml}
         </div>
       `;
     } else {
@@ -986,6 +1004,37 @@ function addAIMessage(html, mcqData = null, revealData = null) {
         }, 50);
       });
     }
+
+    // Tab switching logic
+    const tabBtns = wrap.querySelectorAll('.tab-btn');
+    const tabContents = wrap.querySelectorAll('.tab-content');
+    
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const index = btn.getAttribute('data-index');
+        
+        // Update buttons
+        tabBtns.forEach(b => {
+          b.style.background = 'transparent';
+          b.style.color = 'var(--g)';
+        });
+        btn.style.background = 'var(--g)';
+        btn.style.color = '#000';
+        
+        // Update contents
+        tabContents.forEach(content => {
+          if (content.getAttribute('data-index') === index) {
+            content.style.display = 'block';
+            // Re-trigger animation
+            content.style.animation = 'none';
+            content.offsetHeight; // trigger reflow
+            content.style.animation = 'fadeUp 0.4s ease forwards';
+          } else {
+            content.style.display = 'none';
+          }
+        });
+      });
+    });
   }
 
   // Attach event listeners for dynamically created buttons
@@ -1047,7 +1096,7 @@ function buildRevealCard(d, index = 0) {
       <div class="rev-why">"${d.why}"</div>
       <div class="cta-row">
         <a class="cta-btn primary" href="${CONFIG.BOUTIQUE_URL}" target="_blank">🛍 Commander ton parfum idéal</a>
-        <a class="cta-btn secondary" href="${CONFIG.WHATSAPP}" target="_blank">💬 Contacter Amandine</a>
+        <a class="cta-btn secondary" href="${CONFIG.WHATSAPP}" target="_blank">💬 Nous contacter</a>
       </div>
     </div>`;
 }
@@ -1187,7 +1236,7 @@ document.getElementById('userInput').addEventListener('keydown', e => {
 });
 document.getElementById('sendButton').addEventListener('click', handleFreeInput);
 
-document.getElementById('btn-amandine').addEventListener('click', () => {
+document.getElementById('btn-contact').addEventListener('click', () => {
   window.open(CONFIG.WHATSAPP, '_blank');
 });
 
