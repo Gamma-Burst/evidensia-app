@@ -666,189 +666,189 @@ Renvoie un tableau JSON dans la balise <REVEAL> à la toute fin de ton message :
 const QUESTIONS = [
   {
     id: 'gender',
-    question: "1. Tu es :",
+    question: "1. Pour commencer cette découverte, vous êtes :",
     cols: 1,
     choices: [
-      {icon:"👩", title:"Femme", desc:"", score:[]},
-      {icon:"👨", title:"Homme", desc:"", score:[]},
-      {icon:"✨", title:"Peu importe / parfum mixte", desc:"", score:[]}
+      {icon:"👩", title:"Femme", desc:"Je recherche une fragrance féminine.", score:[]},
+      {icon:"👨", title:"Homme", desc:"Je recherche une fragrance masculine.", score:[]},
+      {icon:"✨", title:"Peu importe", desc:"J'aime les parfums unisexes.", score:[]}
     ]
   },
   {
     id: 'age',
-    question: "2. Quel âge as-tu ?",
+    question: "2. Dans quelle tranche d'âge vous situez-vous ?",
     cols: 2,
     choices: [
-      {icon:"🌱", title:"-18 ans", desc:"", score:[]},
-      {icon:"🌟", title:"18–25 ans", desc:"", score:[]},
-      {icon:"💼", title:"26–35 ans", desc:"", score:[]},
-      {icon:"🍷", title:"36–45 ans", desc:"", score:[]},
-      {icon:"👑", title:"45+ ans", desc:"", score:[]}
+      {icon:"🌱", title:"-18 ans", desc:"La jeunesse et la découverte.", score:[]},
+      {icon:"🌟", title:"18–25 ans", desc:"L'énergie et l'affirmation de soi.", score:[]},
+      {icon:"💼", title:"26–35 ans", desc:"L'assurance et le dynamisme.", score:[]},
+      {icon:"🍷", title:"36–45 ans", desc:"L'élégance et la maturité.", score:[]},
+      {icon:"👑", title:"45+ ans", desc:"Le raffinement et l'intemporalité.", score:[]}
     ]
   },
   {
     id: 'occasion',
-    question: "3. À quel moment portes-tu le plus souvent du parfum ?",
+    question: "3. À quelle occasion porterez-vous principalement ce parfum ?",
     cols: 2,
     choices: [
-      {icon:"☀️", title:"Tous les jours", desc:"", score:[]},
-      {icon:"💻", title:"Travail", desc:"", score:[]},
-      {icon:"🥂", title:"Sorties / soirées", desc:"", score:[]},
-      {icon:"❤️", title:"Rendez-vous amoureux", desc:"", score:[]},
-      {icon:"🎉", title:"Occasions spéciales", desc:"", score:[]}
+      {icon:"☀️", title:"Tous les jours", desc:"Ma signature au quotidien.", score:[]},
+      {icon:"💻", title:"Travail", desc:"Discret, professionnel et élégant.", score:[]},
+      {icon:"🥂", title:"Sorties / soirées", desc:"Pour marquer les esprits.", score:[]},
+      {icon:"❤️", title:"Rendez-vous", desc:"Séduisant et envoûtant.", score:[]},
+      {icon:"🎉", title:"Grandes occasions", desc:"Pour les moments inoubliables.", score:[]}
     ]
   },
   {
     id: 'parfum_actuel',
-    question: "4. Pour mieux cerner votre signature olfactive, quel parfum portez-vous actuellement ?",
+    question: "4. Quels sont les parfums que vous portez déjà ou que vous avez beaucoup aimés ?",
     cols: 1,
     choices: [
-      {icon:"🤷", title:"Je ne porte pas encore de parfum", desc:"", score:[]}
+      {icon:"🤷", title:"Je ne porte pas encore de parfum", desc:"Je cherche ma toute première signature olfactive.", score:[]}
     ]
   },
   {
     id: 'type_odeur',
-    question: "🌿 5. Quel type d’odeur t’attire le plus ?",
+    question: "🌿 5. Vers quelle famille olfactive votre nez se tourne-t-il naturellement ?",
     cols: 2,
     choices: [
-      {icon:"🌸", title:"Fleurs", desc:"Rose, jasmin, pivoine", score:['floral']},
-      {icon:"🍊", title:"Agrumes", desc:"Citron, orange, mandarine", score:['frais']},
-      {icon:"🍰", title:"Sucré", desc:"Vanille, caramel, chocolat", score:['gourmand']},
-      {icon:"🌳", title:"Bois", desc:"Santal, cèdre, oud", score:['boise']},
-      {icon:"🌶", title:"Épices", desc:"Cannelle, poivre, ambre", score:['oriental']},
-      {icon:"🌊", title:"Océan / Air frais", desc:"Pluie, embruns", score:['aquatique']}
+      {icon:"🌸", title:"Fleurs", desc:"Un bouquet délicat de rose ou jasmin.", score:['floral']},
+      {icon:"🍊", title:"Agrumes", desc:"L'énergie pétillante du citron ou de l'orange.", score:['frais']},
+      {icon:"🍰", title:"Sucré", desc:"La gourmandise de la vanille ou du caramel.", score:['gourmand']},
+      {icon:"🌳", title:"Bois", desc:"La chaleur profonde du santal ou du cèdre.", score:['boise']},
+      {icon:"🌶", title:"Épices", desc:"Le caractère piquant et chaud de l'ambre.", score:['oriental']},
+      {icon:"🌊", title:"Océan", desc:"La pureté d'une brise marine ou de la pluie.", score:['aquatique']}
     ]
   },
   {
     id: 'odeur_envie',
-    question: "🍊 6. Choisis l’odeur qui te donne le plus envie :",
+    question: "🍊 6. Si vous deviez fermer les yeux, quelle note vous ferait le plus voyager ?",
     cols: 2,
     choices: [
-      {icon:"🍦", title:"Vanille", desc:"", score:['gourmand']},
-      {icon:"🍋", title:"Citron frais", desc:"", score:['frais']},
-      {icon:"🌹", title:"Rose", desc:"", score:['floral']},
-      {icon:"🪵", title:"Bois de santal", desc:"", score:['boise']},
-      {icon:"🍯", title:"Ambre", desc:"", score:['oriental']},
-      {icon:"🥥", title:"Noix de coco", desc:"", score:['gourmand', 'frais']}
+      {icon:"🍦", title:"Vanille", desc:"Douce, chaleureuse et réconfortante.", score:['gourmand']},
+      {icon:"🍋", title:"Citron frais", desc:"Vif, acidulé et plein de peps.", score:['frais']},
+      {icon:"🌹", title:"Rose", desc:"Romantique, florale et intemporelle.", score:['floral']},
+      {icon:"🪵", title:"Bois de santal", desc:"Crémeux, boisé et apaisant.", score:['boise']},
+      {icon:"🍯", title:"Ambre", desc:"Riche, mystérieux et oriental.", score:['oriental']},
+      {icon:"🥥", title:"Noix de coco", desc:"Solaire, exotique et estivale.", score:['gourmand', 'frais']}
     ]
   },
   {
     id: 'intensite',
-    question: "🌞 7. Quelle intensité de parfum préfères-tu ?",
+    question: "🌞 7. Comment aimez-vous que votre parfum se fasse remarquer ?",
     cols: 2,
     choices: [
-      {icon:"☁️", title:"Très léger", desc:"", score:['frais', 'aquatique']},
-      {icon:"🍃", title:"Léger", desc:"", score:['frais', 'floral']},
-      {icon:"⚖️", title:"Moyen", desc:"", score:[]},
-      {icon:"🔥", title:"Intense", desc:"", score:['boise', 'gourmand']},
-      {icon:"💥", title:"Très intense", desc:"", score:['oriental']}
+      {icon:"☁️", title:"Très léger", desc:"Un murmure parfumé, juste pour moi.", score:['frais', 'aquatique']},
+      {icon:"🍃", title:"Léger", desc:"Une brise subtile qui m'accompagne.", score:['frais', 'floral']},
+      {icon:"⚖️", title:"Moyen", desc:"Présent sans être entêtant.", score:[]},
+      {icon:"🔥", title:"Intense", desc:"Un sillage affirmé qui laisse une trace.", score:['boise', 'gourmand']},
+      {icon:"💥", title:"Très intense", desc:"Puissant, opulent et inoubliable.", score:['oriental']}
     ]
   },
   {
     id: 'sensation',
-    question: "🌸 8. Quelle sensation veux-tu donner avec ton parfum ?",
+    question: "🌸 8. Quelle émotion souhaitez-vous transmettre à travers votre sillage ?",
     cols: 2,
     choices: [
-      {icon:"🧊", title:"Fraîcheur", desc:"", score:['frais', 'aquatique']},
-      {icon:"☁️", title:"Douceur", desc:"", score:['floral', 'gourmand']},
-      {icon:"💋", title:"Séduction", desc:"", score:['oriental', 'gourmand']},
-      {icon:"✨", title:"Élégance", desc:"", score:['boise', 'floral']},
-      {icon:"🎭", title:"Mystère", desc:"", score:['oriental', 'boise']}
+      {icon:"🧊", title:"Fraîcheur", desc:"L'impression de sortir d'une douche vivifiante.", score:['frais', 'aquatique']},
+      {icon:"☁️", title:"Douceur", desc:"Un cocon tendre et rassurant.", score:['floral', 'gourmand']},
+      {icon:"💋", title:"Séduction", desc:"Un charme magnétique et irrésistible.", score:['oriental', 'gourmand']},
+      {icon:"✨", title:"Élégance", desc:"Une allure chic et sophistiquée.", score:['boise', 'floral']},
+      {icon:"🎭", title:"Mystère", desc:"Une aura intrigante et insaisissable.", score:['oriental', 'boise']}
     ]
   },
   {
     id: 'ambiance',
-    question: "🌴 9. Quelle ambiance te correspond le plus ?",
+    question: "🌴 9. Dans quel décor vous sentez-vous le plus dans votre élément ?",
     cols: 2,
     choices: [
-      {icon:"🌷", title:"Jardin fleuri", desc:"", score:['floral']},
-      {icon:"🏖", title:"Plage tropicale", desc:"", score:['aquatique', 'frais']},
-      {icon:"🌲", title:"Forêt profonde", desc:"", score:['boise']},
-      {icon:"🏙", title:"Ville chic", desc:"", score:['boise', 'floral']},
-      {icon:"🧁", title:"Pâtisserie gourmande", desc:"", score:['gourmand']}
+      {icon:"🌷", title:"Jardin fleuri", desc:"Entouré(e) de pétales et de rosée matinale.", score:['floral']},
+      {icon:"🏖", title:"Plage tropicale", desc:"Le soleil, le sable chaud et les embruns.", score:['aquatique', 'frais']},
+      {icon:"🌲", title:"Forêt profonde", desc:"L'odeur de la terre, des feuilles et du bois.", score:['boise']},
+      {icon:"🏙", title:"Ville chic", desc:"L'effervescence urbaine et les soirées mondaines.", score:['boise', 'floral']},
+      {icon:"🧁", title:"Pâtisserie", desc:"Les effluves sucrés de gâteaux tout juste sortis du four.", score:['gourmand']}
     ]
   },
   {
     id: 'saison',
-    question: "🌷 10. Quelle saison préfères-tu ?",
+    question: "🌷 10. Quelle saison résonne le plus avec votre humeur actuelle ?",
     cols: 2,
     choices: [
-      {icon:"🌱", title:"Printemps", desc:"", score:['floral']},
-      {icon:"☀️", title:"Été", desc:"", score:['frais', 'aquatique']},
-      {icon:"🍂", title:"Automne", desc:"", score:['boise']},
-      {icon:"❄️", title:"Hiver", desc:"", score:['oriental', 'gourmand']},
-      {icon:"🌍", title:"Toute l'année", desc:"", score:[]}
+      {icon:"🌱", title:"Printemps", desc:"Le renouveau, la floraison et la légèreté.", score:['floral']},
+      {icon:"☀️", title:"Été", desc:"La chaleur, les vacances et la luminosité.", score:['frais', 'aquatique']},
+      {icon:"🍂", title:"Automne", desc:"Les feuilles rousses et les soirées cocooning.", score:['boise']},
+      {icon:"❄️", title:"Hiver", desc:"Le froid piquant contrastant avec un feu de cheminée.", score:['oriental', 'gourmand']},
+      {icon:"🌍", title:"Toute l'année", desc:"Un parfum intemporel qui traverse les saisons.", score:[]}
     ]
   },
   {
     id: 'personnalite',
-    question: "🌿 11. Quel mot décrit le mieux ta personnalité ?",
+    question: "🌿 11. Si vos proches devaient vous décrire en un mot :",
     cols: 2,
     choices: [
-      {icon:"💝", title:"Romantique", desc:"", score:['floral']},
-      {icon:"⚡", title:"Dynamique", desc:"", score:['frais']},
-      {icon:"🎩", title:"Élégant(e)", desc:"", score:['boise']},
-      {icon:"🕵️", title:"Mystérieux(se)", desc:"", score:['oriental']},
-      {icon:"🌱", title:"Naturel(le)", desc:"", score:['aquatique', 'frais']}
+      {icon:"💝", title:"Romantique", desc:"Sensible, rêveur(se) et affectueux(se).", score:['floral']},
+      {icon:"⚡", title:"Dynamique", desc:"Plein(e) d'énergie, toujours en mouvement.", score:['frais']},
+      {icon:"🎩", title:"Élégant(e)", desc:"Raffiné(e), avec un goût pour les belles choses.", score:['boise']},
+      {icon:"🕵️", title:"Mystérieux(se)", desc:"Secret(e), avec une part d'ombre fascinante.", score:['oriental']},
+      {icon:"🌱", title:"Naturel(le)", desc:"Authentique, simple et sans artifice.", score:['aquatique', 'frais']}
     ]
   },
   {
     id: 'style',
-    question: "💄 12. Ton style vestimentaire est plutôt :",
+    question: "💄 12. Comment définiriez-vous votre style vestimentaire au quotidien ?",
     cols: 2,
     choices: [
-      {icon:"👗", title:"Féminin / délicat", desc:"", score:['floral']},
-      {icon:"👟", title:"Sportif", desc:"", score:['frais', 'aquatique']},
-      {icon:"👔", title:"Chic / classe", desc:"", score:['boise']},
-      {icon:"👠", title:"Sexy / séduisant", desc:"", score:['oriental', 'gourmand']},
-      {icon:"👕", title:"Simple / naturel", desc:"", score:['frais', 'aquatique']}
+      {icon:"👗", title:"Féminin / délicat", desc:"Robes fluides, matières douces et détails soignés.", score:['floral']},
+      {icon:"👟", title:"Sportif", desc:"Confortable, pratique et décontracté.", score:['frais', 'aquatique']},
+      {icon:"👔", title:"Chic / classe", desc:"Coupes structurées, pièces intemporelles et élégantes.", score:['boise']},
+      {icon:"👠", title:"Sexy / séduisant", desc:"Audacieux, mettant en valeur la silhouette.", score:['oriental', 'gourmand']},
+      {icon:"👕", title:"Simple / naturel", desc:"Basiques de qualité, sans en faire trop.", score:['frais', 'aquatique']}
     ]
   },
   {
     id: 'moment',
-    question: "🌙 13. Quel moment de la journée préfères-tu ?",
+    question: "🌙 13. À quel instant de la journée vous sentez-vous le plus inspiré(e) ?",
     cols: 2,
     choices: [
-      {icon:"🌅", title:"Matin", desc:"", score:['frais', 'aquatique']},
-      {icon:"☀️", title:"Après-midi", desc:"", score:['floral']},
-      {icon:"🌇", title:"Soir", desc:"", score:['boise', 'gourmand']},
-      {icon:"🌌", title:"Nuit", desc:"", score:['oriental']}
+      {icon:"🌅", title:"Matin", desc:"L'aube claire et les nouveaux départs.", score:['frais', 'aquatique']},
+      {icon:"☀️", title:"Après-midi", desc:"Le soleil au zénith et l'effervescence.", score:['floral']},
+      {icon:"🌇", title:"Soir", desc:"Le crépuscule et les moments de détente.", score:['boise', 'gourmand']},
+      {icon:"🌌", title:"Nuit", desc:"Le calme nocturne et les mystères.", score:['oriental']}
     ]
   },
   {
     id: 'preferes_sentir',
-    question: "🌺 14. Que préfères-tu sentir ?",
+    question: "🌺 14. Quelle est l'odeur qui vous réconforte instantanément ?",
     cols: 2,
     choices: [
-      {icon:"💐", title:"Bouquet de fleurs", desc:"", score:['floral']},
-      {icon:"🎂", title:"Gâteau à la vanille", desc:"", score:['gourmand']},
-      {icon:"🌊", title:"Air marin", desc:"", score:['aquatique']},
-      {icon:"🪵", title:"Bois chaud", desc:"", score:['boise']},
-      {icon:"🍓", title:"Fruits frais", desc:"", score:['frais']}
+      {icon:"💐", title:"Bouquet de fleurs", desc:"La fraîcheur d'un fleuriste.", score:['floral']},
+      {icon:"🎂", title:"Gâteau à la vanille", desc:"La douceur d'un dessert d'enfance.", score:['gourmand']},
+      {icon:"🌊", title:"Air marin", desc:"Le vent salé de l'océan.", score:['aquatique']},
+      {icon:"🪵", title:"Bois chaud", desc:"L'odeur d'un feu de bois ou d'une forêt.", score:['boise']},
+      {icon:"🍓", title:"Fruits frais", desc:"Le jus sucré d'un fruit d'été.", score:['frais']}
     ]
   },
   {
     id: 'recherche',
-    question: "💎 15. Que recherches-tu dans un parfum ?",
+    question: "💎 15. Quelle est votre priorité absolue pour votre future signature olfactive ?",
     cols: 2,
     choices: [
-      {icon:"⏳", title:"Longue tenue", desc:"", score:['oriental', 'boise']},
-      {icon:"☁️", title:"Odeur douce", desc:"", score:['floral', 'gourmand']},
-      {icon:"🦄", title:"Odeur unique", desc:"", score:['boise', 'oriental']},
-      {icon:"💨", title:"Sillage puissant", desc:"", score:['oriental']},
-      {icon:"🧊", title:"Fraîcheur", desc:"", score:['frais', 'aquatique']}
+      {icon:"⏳", title:"Longue tenue", desc:"Un parfum qui reste sur la peau jusqu'au soir.", score:['oriental', 'boise']},
+      {icon:"☁️", title:"Odeur douce", desc:"Une fragrance qui n'agresse pas, tout en subtilité.", score:['floral', 'gourmand']},
+      {icon:"🦄", title:"Odeur unique", desc:"Un parfum rare que l'on ne sent pas partout.", score:['boise', 'oriental']},
+      {icon:"💨", title:"Sillage puissant", desc:"Une odeur qui emplit la pièce quand j'arrive.", score:['oriental']},
+      {icon:"🧊", title:"Fraîcheur", desc:"Une sensation de propreté et de légèreté.", score:['frais', 'aquatique']}
     ]
   },
   {
     id: 'lieu',
-    question: "⭐ 16. Si ton parfum était un lieu, ce serait :",
+    question: "⭐ 16. Pour finir, si votre parfum devait vous transporter dans un lieu, ce serait :",
     cols: 2,
     choices: [
-      {icon:"🌺", title:"Un jardin rempli de fleurs", desc:"", score:['floral']},
-      {icon:"🏝", title:"Une plage au soleil", desc:"", score:['aquatique', 'frais']},
-      {icon:"🧁", title:"Une pâtisserie", desc:"", score:['gourmand']},
-      {icon:"🌲", title:"Une forêt", desc:"", score:['boise']},
-      {icon:"🕌", title:"Un palais oriental", desc:"", score:['oriental']}
+      {icon:"🌺", title:"Un jardin fleuri", desc:"Un écrin de verdure et de pétales colorés.", score:['floral']},
+      {icon:"🏝", title:"Une plage au soleil", desc:"Une étendue de sable fin face à la mer.", score:['aquatique', 'frais']},
+      {icon:"🧁", title:"Une pâtisserie", desc:"Une boutique aux effluves sucrés et chauds.", score:['gourmand']},
+      {icon:"🌲", title:"Une forêt", desc:"Un sous-bois mystérieux et ressourçant.", score:['boise']},
+      {icon:"🕌", title:"Un palais oriental", desc:"Un lieu somptueux aux senteurs d'épices et d'encens.", score:['oriental']}
     ]
   }
 ];
