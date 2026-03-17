@@ -468,18 +468,20 @@ html {
 }
 
 /* ══════════════════════════════
-   BOUTON FLOTTANT CONTACT
+   BOUTON CONTACT (FIN DE PARCOURS)
 ══════════════════════════════ */
 .fab-contact{
-  position:fixed;bottom:96px;right:16px;z-index:10;
+  display:none; /* Hidden initially */
   background:linear-gradient(135deg,var(--g),var(--g2));
   border:none;border-radius:22px;
-  padding:9px 16px;color:#08060a;
-  font-size:11.5px;font-family:'DM Sans',sans-serif;
-  font-weight:500;cursor:pointer;
-  display:flex;align-items:center;gap:6px;
+  padding:12px 24px;color:#08060a;
+  font-size:14px;font-family:'DM Sans',sans-serif;
+  font-weight:600;cursor:pointer;
+  align-items:center;justify-content:center;gap:8px;
   box-shadow:0 4px 18px rgba(201,168,76,.3);
   transition:all .2s;letter-spacing:.04em;
+  margin: 32px auto 16px auto;
+  width: fit-content;
 }
 .fab-contact:hover{
   transform:translateY(-3px);
@@ -556,7 +558,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="progress-fill" id="progressFill" style="height:100%; background:var(--g); width:0%; transition:width 0.4s ease;"></div>
     </div>
   </div>
-  <div class="step-label" id="stepLabel" style="font-size:11px; color:var(--t3); text-align:center; font-family:'DM Sans',sans-serif; letter-spacing:0.05em; margin-top:6px;">Question 1 / 15</div>
+  <div class="step-label" id="stepLabel" style="font-size:11px; color:var(--t3); text-align:center; font-family:'DM Sans',sans-serif; letter-spacing:0.05em; margin-top:6px;">Question 1 / 16</div>
 </header>
 
 <!-- ══════════════════════════════
@@ -644,6 +646,7 @@ RÈGLES :
 - Agis comme un véritable expert : explique les sous-familles olfactives avec pédagogie.
 - Fais preuve de psychologie : explique pourquoi certaines notes s'accordent avec la personnalité ou le contexte du client.
 - CONTRAINTE ABSOLUE SUR LE GENRE : Si le profil indique "Homme", tu DOIS recommander UNIQUEMENT des parfums pour homme ou mixtes. Si le profil indique "Femme", tu DOIS recommander UNIQUEMENT des parfums pour femme ou mixtes. Ne propose JAMAIS un parfum féminin (ex: J'adore, La Vie est Belle, Coco Mademoiselle) à un homme, ni un parfum masculin (ex: 1Million, Sauvage, Bleu de Chanel) à une femme. Vérifie bien la cible de chaque parfum avant de le proposer.
+- ATTENTION CRITIQUE : La liste de parfums ci-dessus ne précise pas toujours le genre. Tu DOIS utiliser tes connaissances d'expert en parfumerie pour déterminer si le parfum original correspondant à la référence est pour Homme, Femme ou Mixte. Une erreur de genre est inacceptable.
 - Avant de donner ta recommandation finale, rédige un paragraphe d'introduction poétique et expert qui résume le "voyage olfactif" du client et explique tes choix.
 - Boutique : ${CONFIG.BOUTIQUE_URL}
 
@@ -651,9 +654,9 @@ FORMAT REVEAL OBLIGATOIRE quand tu fais une recommandation finale :
 Tu DOIS proposer EXACTEMENT 3 parfums différents pour offrir un vrai choix professionnel (L'Évidence, L'Alternative Subtile, L'Alternative Audacieuse).
 Renvoie un tableau JSON dans la balise <REVEAL> à la toute fin de ton message :
 <REVEAL>[
-  {"n":117,"ref":"Tobacco Vanille","price":"52€","family":"Orientale/Ambrée","sub":"Ambré Épicé","notes":["Tabac blond","Vanille bourbon","Épices chaudes"],"why":"Votre tempérament affirmé et votre goût pour les sillages puissants appellent cette référence iconique. L'ambre épicé viendra souligner votre charisme naturel."},
-  {"n":1,"ref":"1 Million","price":"35€","family":"Boisée","sub":"Boisé Épicé","notes":["Pamplemousse","Menthe","Cuir blond"],"why":"Une alternative plus lumineuse et vibrante..."},
-  {"n":106,"ref":"Fucking Fabulous","price":"52€","family":"Cuiré","sub":"Cuir","notes":["Amande amère","Fève tonka","Cuir"],"why":"Pour sortir de votre zone de confort avec une audace absolue..."}
+  {"n":117,"ref":"Tobacco Vanille","gender":"Mixte","price":"52€","family":"Orientale/Ambrée","sub":"Ambré Épicé","notes":["Tabac blond","Vanille bourbon","Épices chaudes"],"why":"Votre tempérament affirmé et votre goût pour les sillages puissants appellent cette référence iconique. L'ambre épicé viendra souligner votre charisme naturel."},
+  {"n":1,"ref":"1 Million","gender":"Homme","price":"35€","family":"Boisée","sub":"Boisé Épicé","notes":["Pamplemousse","Menthe","Cuir blond"],"why":"Une alternative plus lumineuse et vibrante..."},
+  {"n":106,"ref":"Fucking Fabulous","gender":"Mixte","price":"52€","family":"Cuiré","sub":"Cuir","notes":["Amande amère","Fève tonka","Cuir"],"why":"Pour sortir de votre zone de confort avec une audace absolue..."}
 ]</REVEAL>`;
 }
 
@@ -696,8 +699,16 @@ const QUESTIONS = [
     ]
   },
   {
+    id: 'parfum_actuel',
+    question: "4. Pour mieux cerner votre signature olfactive, quel parfum portez-vous actuellement ?",
+    cols: 1,
+    choices: [
+      {icon:"🤷", title:"Je ne porte pas encore de parfum", desc:"", score:[]}
+    ]
+  },
+  {
     id: 'type_odeur',
-    question: "🌿 4. Quel type d’odeur t’attire le plus ?",
+    question: "🌿 5. Quel type d’odeur t’attire le plus ?",
     cols: 2,
     choices: [
       {icon:"🌸", title:"Fleurs", desc:"Rose, jasmin, pivoine", score:['floral']},
@@ -710,7 +721,7 @@ const QUESTIONS = [
   },
   {
     id: 'odeur_envie',
-    question: "🍊 5. Choisis l’odeur qui te donne le plus envie :",
+    question: "🍊 6. Choisis l’odeur qui te donne le plus envie :",
     cols: 2,
     choices: [
       {icon:"🍦", title:"Vanille", desc:"", score:['gourmand']},
@@ -723,7 +734,7 @@ const QUESTIONS = [
   },
   {
     id: 'intensite',
-    question: "🌞 6. Quelle intensité de parfum préfères-tu ?",
+    question: "🌞 7. Quelle intensité de parfum préfères-tu ?",
     cols: 2,
     choices: [
       {icon:"☁️", title:"Très léger", desc:"", score:['frais', 'aquatique']},
@@ -735,7 +746,7 @@ const QUESTIONS = [
   },
   {
     id: 'sensation',
-    question: "🌸 7. Quelle sensation veux-tu donner avec ton parfum ?",
+    question: "🌸 8. Quelle sensation veux-tu donner avec ton parfum ?",
     cols: 2,
     choices: [
       {icon:"🧊", title:"Fraîcheur", desc:"", score:['frais', 'aquatique']},
@@ -747,7 +758,7 @@ const QUESTIONS = [
   },
   {
     id: 'ambiance',
-    question: "🌴 8. Quelle ambiance te correspond le plus ?",
+    question: "🌴 9. Quelle ambiance te correspond le plus ?",
     cols: 2,
     choices: [
       {icon:"🌷", title:"Jardin fleuri", desc:"", score:['floral']},
@@ -759,7 +770,7 @@ const QUESTIONS = [
   },
   {
     id: 'saison',
-    question: "🌷 9. Quelle saison préfères-tu ?",
+    question: "🌷 10. Quelle saison préfères-tu ?",
     cols: 2,
     choices: [
       {icon:"🌱", title:"Printemps", desc:"", score:['floral']},
@@ -771,7 +782,7 @@ const QUESTIONS = [
   },
   {
     id: 'personnalite',
-    question: "🌿 10. Quel mot décrit le mieux ta personnalité ?",
+    question: "🌿 11. Quel mot décrit le mieux ta personnalité ?",
     cols: 2,
     choices: [
       {icon:"💝", title:"Romantique", desc:"", score:['floral']},
@@ -783,7 +794,7 @@ const QUESTIONS = [
   },
   {
     id: 'style',
-    question: "💄 11. Ton style vestimentaire est plutôt :",
+    question: "💄 12. Ton style vestimentaire est plutôt :",
     cols: 2,
     choices: [
       {icon:"👗", title:"Féminin / délicat", desc:"", score:['floral']},
@@ -795,7 +806,7 @@ const QUESTIONS = [
   },
   {
     id: 'moment',
-    question: "🌙 12. Quel moment de la journée préfères-tu ?",
+    question: "🌙 13. Quel moment de la journée préfères-tu ?",
     cols: 2,
     choices: [
       {icon:"🌅", title:"Matin", desc:"", score:['frais', 'aquatique']},
@@ -806,7 +817,7 @@ const QUESTIONS = [
   },
   {
     id: 'preferes_sentir',
-    question: "🌺 13. Que préfères-tu sentir ?",
+    question: "🌺 14. Que préfères-tu sentir ?",
     cols: 2,
     choices: [
       {icon:"💐", title:"Bouquet de fleurs", desc:"", score:['floral']},
@@ -818,7 +829,7 @@ const QUESTIONS = [
   },
   {
     id: 'recherche',
-    question: "💎 14. Que recherches-tu dans un parfum ?",
+    question: "💎 15. Que recherches-tu dans un parfum ?",
     cols: 2,
     choices: [
       {icon:"⏳", title:"Longue tenue", desc:"", score:['oriental', 'boise']},
@@ -830,7 +841,7 @@ const QUESTIONS = [
   },
   {
     id: 'lieu',
-    question: "⭐ 15. Si ton parfum était un lieu, ce serait :",
+    question: "⭐ 16. Si ton parfum était un lieu, ce serait :",
     cols: 2,
     choices: [
       {icon:"🌺", title:"Un jardin rempli de fleurs", desc:"", score:['floral']},
@@ -854,8 +865,8 @@ let freeModeStep = null;
 const intros = {
   0: "Bonjour ! Je suis <strong>Evidensia</strong>, votre Maître Parfumeur virtuel. Prêt(e) à trouver votre signature olfactive ? Commençons par faire connaissance.",
   3: "Très bien. Entrons maintenant dans le vif du sujet olfactif...",
-  7: "C'est noté. Faisons appel à votre imagination maintenant...",
-  13: "Presque terminé ! Plus que deux petites questions pour affiner mon diagnostic..."
+  8: "C'est noté. Faisons appel à votre imagination maintenant...",
+  14: "Presque terminé ! Plus que deux petites questions pour affiner mon diagnostic..."
 };
 
 // ════════════════════════════════════════════════════════
@@ -1013,6 +1024,13 @@ function addAIMessage(html, mcqData = null, revealData = null) {
       summaryEl.addEventListener('click', () => {
         summaryEl.style.display = 'none';
         containerEl.style.display = 'flex';
+        
+        const btnContact = document.getElementById('btn-contact');
+        if (btnContact) {
+          btnContact.style.display = 'flex';
+          chatArea.appendChild(btnContact);
+        }
+
         setTimeout(() => {
           containerEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 50);
@@ -1049,6 +1067,12 @@ function addAIMessage(html, mcqData = null, revealData = null) {
         });
       });
     });
+  } else if (revealData) {
+    const btnContact = document.getElementById('btn-contact');
+    if (btnContact) {
+      btnContact.style.display = 'flex';
+      chatArea.appendChild(btnContact);
+    }
   }
 
   // Attach event listeners for dynamically created buttons
@@ -1097,11 +1121,15 @@ function buildRevealCard(d, index = 0) {
   const notesTags = (d.notes || []).map(n => `<span class="note-tag">${n}</span>`).join('');
   const familyText = d.sub ? `${d.family} • ${d.sub}` : d.family;
   const priceHtml = d.price ? `<div class="rev-price">${d.price}</div>` : '';
+  const genderHtml = d.gender ? `<div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--g); font-weight: 600; margin-bottom: 8px;">${d.gender}</div>` : '';
   
   return `
     <div class="reveal-card" style="animation-delay: ${0.3 + index * 0.2}s">
       <div class="rev-header" style="display:flex; justify-content:space-between; align-items:flex-start;">
-        <div class="rev-number">N°${d.n}</div>
+        <div style="display:flex; flex-direction:column;">
+          ${genderHtml}
+          <div class="rev-number">N°${d.n}</div>
+        </div>
         ${priceHtml}
       </div>
       <div class="rev-ref">${d.ref.toUpperCase()}</div>
@@ -1175,6 +1203,7 @@ function activateFreeMode(stepId) {
     gender: 'pour qui est ce parfum',
     age: 'votre âge',
     occasion: 'votre occasion',
+    parfum_actuel: 'votre parfum actuel',
     type_odeur: 'votre type d\'odeur',
     odeur_envie: 'votre odeur préférée',
     intensite: 'votre intensité idéale',
