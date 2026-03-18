@@ -547,21 +547,51 @@ html {
 .goog-te-banner-frame.skiptranslate { display: none !important; }
 body { top: 0px !important; }
 .goog-logo-link { display:none !important; }
-.goog-te-gadget { color: transparent !important; font-size:0px; }
+.goog-te-gadget { color: transparent !important; font-size:0px !important; }
+.goog-te-gadget > span { display: none !important; }
 .goog-te-gadget .goog-te-combo {
-  background: rgba(255,255,255,0.05);
-  color: var(--g);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 4px 8px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  outline: none;
-  cursor: pointer;
+  background-color: var(--bg2) !important;
+  color: var(--g) !important;
+  border: 1px solid rgba(201,168,76,0.3) !important;
+  border-radius: 20px !important;
+  padding: 6px 28px 6px 14px !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  outline: none !important;
+  cursor: pointer !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c9a84c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+  background-size: 14px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2) !important;
+  letter-spacing: 0.02em !important;
+  margin: 0 !important;
+}
+.goog-te-gadget .goog-te-combo:hover {
+  border-color: var(--g) !important;
+  box-shadow: 0 4px 15px rgba(201,168,76,0.15) !important;
+  transform: translateY(-1px) !important;
 }
 .goog-te-gadget .goog-te-combo option {
-  background: var(--bg);
-  color: var(--t);
+  background-color: var(--bg) !important;
+  color: var(--t) !important;
+  padding: 8px !important;
+}
+/* Hide Google Translate hover tooltip */
+.goog-text-highlight { background-color: transparent !important; box-shadow: none !important; }
+#goog-gt-tt, .goog-te-balloon-frame { display: none !important; }
+
+@media (max-width: 480px) {
+  .goog-te-gadget .goog-te-combo {
+    padding: 4px 24px 4px 10px !important;
+    font-size: 11px !important;
+    background-size: 12px !important;
+  }
 }
 </style>
 </head>
@@ -597,8 +627,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- ── CANVAS FOND PARTICULES ── -->
 <canvas id="bg-canvas"></canvas>
 
-<header style="text-align: center; padding: 24px 16px; position: relative; z-index: 10;">
-  <div id="google_translate_element" style="position: absolute; top: 16px; right: 16px; z-index: 100;"></div>
+<div style="display: flex; justify-content: flex-end; padding: 16px 16px 0; position: relative; z-index: 100;">
+  <div id="google_translate_element"></div>
+</div>
+
+<header style="text-align: center; padding: 8px 16px 24px; position: relative; z-index: 10;">
   <div class="logo-glyph">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
@@ -1798,8 +1831,7 @@ window.addEventListener('appinstalled', () => {
 function googleTranslateElementInit() {
   new google.translate.TranslateElement({
     pageLanguage: 'fr', 
-    includedLanguages: 'en,es,it,de,pt,nl,fr', 
-    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    includedLanguages: 'en,es,it,de,pt,nl,fr'
   }, 'google_translate_element');
 }
 </script>
