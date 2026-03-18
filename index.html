@@ -542,6 +542,27 @@ html {
   animation:onlinePulse 2s ease-in-out infinite;
 }
 @keyframes onlinePulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── GOOGLE TRANSLATE CUSTOMIZATION ── */
+.goog-te-banner-frame.skiptranslate { display: none !important; }
+body { top: 0px !important; }
+.goog-logo-link { display:none !important; }
+.goog-te-gadget { color: transparent !important; font-size:0px; }
+.goog-te-gadget .goog-te-combo {
+  background: rgba(255,255,255,0.05);
+  color: var(--g);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  outline: none;
+  cursor: pointer;
+}
+.goog-te-gadget .goog-te-combo option {
+  background: var(--bg);
+  color: var(--t);
+}
 </style>
 </head>
 <body>
@@ -577,6 +598,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <canvas id="bg-canvas"></canvas>
 
 <header style="text-align: center; padding: 24px 16px; position: relative; z-index: 10;">
+  <div id="google_translate_element" style="position: absolute; top: 16px; right: 16px; z-index: 100;"></div>
   <div class="logo-glyph">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
@@ -603,15 +625,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- ══════════════════════════════
      BOUTONS FIN DE PARCOURS
 ══════════════════════════════ -->
-<div class="end-actions-container" id="end-actions" style="display:none; justify-content: center; gap: 12px; margin: 32px auto 16px auto; width: 100%; flex-wrap: wrap;">
-  <button class="fab-contact" id="btn-contact" style="margin: 0; display: flex;">
-    <span class="online-pulse"></span>
-    Nous contacter
-  </button>
-  <button class="fab-contact" id="btn-share" style="margin: 0; display: flex; background: transparent; border: 1px solid var(--g); color: var(--g); box-shadow: none;">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
-    Partager
-  </button>
+<div class="end-actions-container" id="end-actions" style="display:none; justify-content: center; gap: 12px; margin: 32px auto 16px auto; width: 100%; flex-wrap: wrap; flex-direction: column; align-items: center;">
+  <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+    <button class="fab-contact" id="btn-contact" style="margin: 0; display: flex;">
+      <span class="online-pulse"></span>
+      Nous contacter
+    </button>
+    <button class="fab-contact" id="btn-share" style="margin: 0; display: flex; background: transparent; border: 1px solid var(--g); color: var(--g); box-shadow: none;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+      Partager
+    </button>
+  </div>
+  <p style="font-size: 11px; color: var(--t3); text-align: center; margin-top: 12px; max-width: 80%; line-height: 1.4;">
+    * Veuillez noter que les produits recommandés sont exclusivement disponibles à la vente en Europe.
+  </p>
 </div>
 
 <!-- ══════════════════════════════
@@ -1766,5 +1793,17 @@ window.addEventListener('appinstalled', () => {
   console.log('PWA was installed');
 });
 </script>
+
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'fr', 
+    includedLanguages: 'en,es,it,de,pt,nl,fr', 
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+  }, 'google_translate_element');
+}
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 </body>
 </html>
