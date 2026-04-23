@@ -686,6 +686,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <p style="font-size: 11px; color: var(--t3); text-align: center; margin-top: 12px; max-width: 80%; line-height: 1.4;">
     * Veuillez noter que les produits recommandés sont exclusivement disponibles à la vente en Europe.
   </p>
+  
+  <!-- Bloc Recrutement Partenaire -->
+  <div style="margin-top: 24px; padding: 20px; background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(201,168,76,0.02)); border: 1px solid var(--border); border-radius: 20px; text-align: center; width: 90%; max-width: 400px; animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 0.5s;">
+    <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--g2); margin-bottom: 8px; font-weight: 400;">✨ Envie de rejoindre notre aventure ?</h3>
+    <p style="font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--t2); line-height: 1.5; margin-bottom: 20px;">
+      Devenez partenaire indépendant et commencez à vendre nos parfums exceptionnels dès aujourd'hui. Une belle opportunité s'offre à vous.
+    </p>
+    <a href="https://www.chogangroupspa.com/registration_consultant/AMA3A32A8" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+      <button class="fab-contact" style="margin: 0 auto; display: inline-flex; width: auto; font-size: 13px; padding: 10px 20px;">
+        Devenir Partenaire
+      </button>
+    </a>
+  </div>
 </div>
 
 <!-- ══════════════════════════════
@@ -1177,10 +1190,21 @@ const chatArea = document.getElementById('chatArea');
 
 function scrollBottom() {
   const doScroll = () => {
-    chatArea.scrollTo({
-      top: chatArea.scrollHeight,
-      behavior: 'smooth'
-    });
+    // On mobile, scroll to the start of the last message (question) 
+    // so the question stays visible with choices below
+    const lastMsg = chatArea.querySelector('.msg:last-child');
+    if (lastMsg) {
+      const msgTop = lastMsg.offsetTop - chatArea.offsetTop;
+      chatArea.scrollTo({
+        top: msgTop,
+        behavior: 'smooth'
+      });
+    } else {
+      chatArea.scrollTo({
+        top: chatArea.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
   };
   // Scroll immediately, then again after animations finish
   setTimeout(doScroll, 50);
