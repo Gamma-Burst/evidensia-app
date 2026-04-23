@@ -1259,33 +1259,22 @@ chatArea.addEventListener('mouseup', () => {
 });
 
 function scrollBottom() {
-  // Clear any previous pending auto-scrolls
-  pendingScrollIds.forEach(clearTimeout);
-  pendingScrollIds = [];
+  // Clear any previous pending auto-scroll
+  if (pendingScrollIds.length) {
+    pendingScrollIds.forEach(clearTimeout);
+    pendingScrollIds = [];
+  }
 
-  const doScroll = () => {
-    // Don't auto-scroll if user is interacting
+  // Single scroll — position the question at the top, then let the user scroll freely
+  pendingScrollIds.push(setTimeout(() => {
     if (userIsTouching) return;
 
-    // Scroll to the start of the last message (question)
-    // so the question stays visible with choices below
     const lastMsg = chatArea.querySelector('.msg:last-child');
     if (lastMsg) {
       const msgTop = lastMsg.offsetTop - chatArea.offsetTop;
-      chatArea.scrollTo({
-        top: msgTop,
-        behavior: 'smooth'
-      });
-    } else {
-      chatArea.scrollTo({
-        top: chatArea.scrollHeight,
-        behavior: 'smooth'
-      });
+      chatArea.scrollTo({ top: msgTop, behavior: 'smooth' });
     }
-  };
-  // Scroll after render, then once more after animations
-  pendingScrollIds.push(setTimeout(doScroll, 50));
-  pendingScrollIds.push(setTimeout(doScroll, 500));
+  }, 80));
 }
 
 function formatText(txt) {
