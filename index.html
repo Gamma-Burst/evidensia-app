@@ -1208,23 +1208,48 @@ const chatArea = document.getElementById('chatArea');
 const headerWrap = document.getElementById('headerWrap');
 
 // ── AUTO-HIDE HEADER ON MOBILE SCROLL ──
+let headerHidden = false;
+let headerCooldown = false;
+
+function hideHeader() {
+  if (headerHidden || headerCooldown || window.innerWidth > 600) return;
+  headerHidden = true;
+  headerCooldown = true;
+  const scrollBefore = chatArea.scrollTop;
+  headerWrap.classList.add('hidden');
+  // Compensate scroll position after layout shift
+  requestAnimationFrame(() => { chatArea.scrollTop = scrollBefore; });
+  setTimeout(() => { headerCooldown = false; }, 500);
+}
+
+function showHeader() {
+  if (!headerHidden || headerCooldown || window.innerWidth > 600) return;
+  headerHidden = false;
+  headerCooldown = true;
+  const scrollBefore = chatArea.scrollTop;
+  headerWrap.classList.remove('hidden');
+  requestAnimationFrame(() => { chatArea.scrollTop = scrollBefore; });
+  setTimeout(() => { headerCooldown = false; }, 500);
+}
+
 (function initAutoHideHeader() {
   let lastScrollY = 0;
   let ticking = false;
 
   chatArea.addEventListener('scroll', () => {
+    if (headerCooldown) return; // Ignore scroll events during layout transitions
     if (!ticking) {
       window.requestAnimationFrame(() => {
         const currentScroll = chatArea.scrollTop;
-        if (window.innerWidth <= 600) {
-          if (currentScroll > lastScrollY && currentScroll > 40) {
-            // Scrolling DOWN → hide header for more space
-            headerWrap.classList.add('hidden');
-          } else if (currentScroll < lastScrollY) {
-            // Scrolling UP → show header
-            headerWrap.classList.remove('hidden');
-          }
+        const delta = currentScroll - lastScrollY;
+
+        if (delta > 8 && currentScroll > 30) {
+          hideHeader();
+        } else if (delta < -8 && currentScroll < 20) {
+          // Only show header when scrolled near the top
+          showHeader();
         }
+
         lastScrollY = currentScroll;
         ticking = false;
       });
@@ -1258,11 +1283,16 @@ chatArea.addEventListener('mouseup', () => {
   setTimeout(() => { userIsTouching = false; }, 800);
 });
 
-function scrollBottom() {
+function scrollBottom(autoHideHeader = false) {
   // Clear any previous pending auto-scroll
   if (pendingScrollIds.length) {
     pendingScrollIds.forEach(clearTimeout);
     pendingScrollIds = [];
+  }
+
+  // On mobile, auto-hide header when showing MCQ to maximize space
+  if (autoHideHeader && window.innerWidth <= 600) {
+    setTimeout(() => hideHeader(), 200);
   }
 
   // Single scroll — position the question at the top, then let the user scroll freely
@@ -1415,7 +1445,7 @@ function addAIMessage(html, mcqData = null, revealData = null) {
     }
   }
 
-  scrollBottom();
+  scrollBottom(!!mcqData);
 }
 
 function addUserMessage(text) {
