@@ -1233,9 +1233,41 @@ const headerWrap = document.getElementById('headerWrap');
   });
 })();
 
+let pendingScrollIds = [];
+let userIsTouching = false;
+
+// Cancel all pending auto-scrolls when user touches/clicks the chat
+chatArea.addEventListener('touchstart', () => {
+  userIsTouching = true;
+  pendingScrollIds.forEach(clearTimeout);
+  pendingScrollIds = [];
+}, { passive: true });
+
+chatArea.addEventListener('touchend', () => {
+  // Keep flag a bit longer to cover scroll momentum
+  setTimeout(() => { userIsTouching = false; }, 1200);
+}, { passive: true });
+
+chatArea.addEventListener('mousedown', () => {
+  userIsTouching = true;
+  pendingScrollIds.forEach(clearTimeout);
+  pendingScrollIds = [];
+});
+
+chatArea.addEventListener('mouseup', () => {
+  setTimeout(() => { userIsTouching = false; }, 800);
+});
+
 function scrollBottom() {
+  // Clear any previous pending auto-scrolls
+  pendingScrollIds.forEach(clearTimeout);
+  pendingScrollIds = [];
+
   const doScroll = () => {
-    // On mobile, scroll to the start of the last message (question) 
+    // Don't auto-scroll if user is interacting
+    if (userIsTouching) return;
+
+    // Scroll to the start of the last message (question)
     // so the question stays visible with choices below
     const lastMsg = chatArea.querySelector('.msg:last-child');
     if (lastMsg) {
@@ -1251,10 +1283,9 @@ function scrollBottom() {
       });
     }
   };
-  // Scroll immediately, then again after animations finish
-  setTimeout(doScroll, 50);
-  setTimeout(doScroll, 400);
-  setTimeout(doScroll, 900);
+  // Scroll after render, then once more after animations
+  pendingScrollIds.push(setTimeout(doScroll, 50));
+  pendingScrollIds.push(setTimeout(doScroll, 500));
 }
 
 function formatText(txt) {
