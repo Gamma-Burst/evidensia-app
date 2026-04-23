@@ -593,6 +593,22 @@ body { top: 0px !important; }
     background-size: 12px !important;
   }
 }
+
+/* ── AUTO-HIDE HEADER ON MOBILE SCROLL ── */
+.header-wrap {
+  max-height: 250px;
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.35s ease;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+@media (max-width: 600px) {
+  .header-wrap.hidden {
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+}
 </style>
 </head>
 <body>
@@ -627,6 +643,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- ── CANVAS FOND PARTICULES ── -->
 <canvas id="bg-canvas"></canvas>
 
+<div id="headerWrap" class="header-wrap">
 <div style="display: flex; justify-content: flex-end; padding: 16px 16px 0; position: relative; z-index: 100;">
   <div id="google_translate_element"></div>
 </div>
@@ -649,6 +666,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div class="step-label" id="stepLabel" style="font-size:11px; color:var(--t3); text-align:center; font-family:'DM Sans',sans-serif; letter-spacing:0.05em; margin-top:6px;">Question 1 / 16</div>
 </header>
+</div><!-- /headerWrap -->
 
 <!-- ══════════════════════════════
      ZONE MESSAGES
@@ -1187,6 +1205,33 @@ const intros = {
 //  HELPERS D'AFFICHAGE
 // ════════════════════════════════════════════════════════
 const chatArea = document.getElementById('chatArea');
+const headerWrap = document.getElementById('headerWrap');
+
+// ── AUTO-HIDE HEADER ON MOBILE SCROLL ──
+(function initAutoHideHeader() {
+  let lastScrollY = 0;
+  let ticking = false;
+
+  chatArea.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const currentScroll = chatArea.scrollTop;
+        if (window.innerWidth <= 600) {
+          if (currentScroll > lastScrollY && currentScroll > 40) {
+            // Scrolling DOWN → hide header for more space
+            headerWrap.classList.add('hidden');
+          } else if (currentScroll < lastScrollY) {
+            // Scrolling UP → show header
+            headerWrap.classList.remove('hidden');
+          }
+        }
+        lastScrollY = currentScroll;
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+})();
 
 function scrollBottom() {
   const doScroll = () => {
