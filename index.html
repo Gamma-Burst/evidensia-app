@@ -748,17 +748,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 // ════════════════════════════════════════════════════════
 //  CONFIGURATION
 // ════════════════════════════════════════════════════════
-const rawKey = process.env.GEMINI_API_KEY || '';
-const cleanKey = rawKey.replace(/^GOOGLE_API_KEY=/, '').replace(/^GEMINI_API_KEY=/, '').trim();
+const rawKey = process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY || '';
+const cleanKey = rawKey
+  .replace(/^GOOGLE_API_KEY=/, '')
+  .replace(/^GEMINI_API_KEY=/, '')
+  .replace(/^OPENAI_API_KEY=/, '')
+  .trim();
 
 const CONFIG = {
-  GEMINI_API_KEY: cleanKey,
+  OPENAI_API_KEY: cleanKey,
+  OPENAI_MODEL: 'gpt-4.1-mini',
   BOUTIQUE_URL: 'https://www.chogangroupspa.com/referral/AMA3A32A8/FR',
   WHATSAPP: 'https://wa.me/32485738874',
 };
 
 // ════════════════════════════════════════════════════════
-//  PROMPT SYSTÈME POUR L'IA (Gemini)
+//  PROMPT SYSTÈME POUR L'IA
 // ════════════════════════════════════════════════════════
 function buildSystemPrompt(profile) {
   const gender = profile.gender ? profile.gender.title : "Non précisé";
@@ -1125,7 +1130,7 @@ function generateQuestionsForGender(gender) {
 // ════════════════════════════════════════════════════════
 let currentStep = 0;
 let userProfile  = {};
-let conversation = []; // Format Gemini: { role: 'user'|'model', parts: [{ text: '...' }] }
+let conversation = []; // Internal format: { role: 'user'|'model', parts: [{ text: '...' }] }
 let isTyping     = false;
 let freeModeStep = null;
 
@@ -1642,7 +1647,7 @@ function handleFreeInput() {
     setTimeout(() => nextQuestion(), 200);
   } else {
     conversation.push({ role: 'user', parts: [{ text: text }] });
-    callGeminiAPI();
+    callOpenAIAPI();
   }
 }
 
@@ -1740,18 +1745,28 @@ ATTENTION CRITIQUE : Le genre cible du parfum est STRICTEMENT : ${gender.toUpper
 Tu DOIS IMPÉRATIVEMENT proposer des parfums pour ${gender.toUpperCase()} (ou mixtes). Ne propose AUCUN parfum exclusivement féminin si je suis un homme, et inversement. C'est une erreur éliminatoire.
 En tant qu'expert parfumeur, rédige une belle introduction pour m'expliquer ce profil. Ensuite, propose-moi EXACTEMENT 3 recommandations (une principale, une alternative subtile, une alternative audacieuse) qui correspondent à ce profil ET AU GENRE DEMANDÉ, en utilisant OBLIGATOIREMENT le format <REVEAL>.` }]
         });
-        callGeminiAPI();
+        callOpenAIAPI();
       }, 300);
     }, 400);
   }, 400);
 }
 
 // ════════════════════════════════════════════════════════
-//  APPEL API GEMINI
+//  APPEL API OPENAI
 // ════════════════════════════════════════════════════════
-async function callGeminiAPI() {
-  if (!CONFIG.GEMINI_API_KEY || CONFIG.GEMINI_API_KEY.length < 10) {
-    addAIMessage("⚠️ <strong>Erreur de configuration :</strong> La clé API Gemini semble invalide ou manquante. Veuillez vérifier vos paramètres (Secrets).");
+function buildOpenAIMessages() {
+  return conversation.map(entry => ({
+    role: entry.role === 'model' ? 'assistant' : entry.role,
+    content: (entry.parts || [])
+      .map(part => part.text || '')
+      .join('\n')
+      .trim(),
+  })).filter(entry => entry.content);
+}
+
+async function callOpenAIAPI() {
+  if (!CONFIG.OPENAI_API_KEY || CONFIG.OPENAI_API_KEY.length < 10) {
+    addAIMessage("⚠️ <strong>Erreur de configuration :</strong> La clé API OpenAI semble invalide ou manquante. Veuillez vérifier vos paramètres (Secrets).");
     return;
   }
 
@@ -1760,20 +1775,29 @@ async function callGeminiAPI() {
   showTypingIndicator();
 
   try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${CONFIG.GEMINI_API_KEY}`, {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${CONFIG.OPENAI_API_KEY}`
+      },
       body: JSON.stringify({
-        system_instruction: { parts: [{ text: buildSystemPrompt(userProfile) }] },
-        contents: conversation,
-        generationConfig: { temperature: 0.7 }
+        model: CONFIG.OPENAI_MODEL,
+        messages: [
+          { role: 'developer', content: buildSystemPrompt(userProfile) },
+          ...buildOpenAIMessages()
+        ],
+        temperature: 0.7
       })
     });
 
     const data = await response.json();
-    if (data.error) throw new Error(data.error.message);
+    if (!response.ok || data.error) {
+      throw new Error(data?.error?.message || `HTTP ${response.status}`);
+    }
 
-    const text = data.candidates[0].content.parts[0].text;
+    const text = data?.choices?.[0]?.message?.content;
+    if (!text) throw new Error("Aucune reponse textuelle renvoyee par OpenAI.");
     conversation.push({ role: 'model', parts: [{ text: text }] });
 
     hideTypingIndicator();
@@ -1806,8 +1830,8 @@ async function callGeminiAPI() {
     hideTypingIndicator();
     isTyping = false;
     document.getElementById('sendButton').disabled = false;
-    if (error.message.includes('API key not valid')) {
-      addAIMessage("⚠️ <strong>Clé API invalide :</strong> La clé Gemini renseignée dans les paramètres n'est pas correcte.");
+    if (error.message.includes('Incorrect API key') || error.message.includes('invalid_api_key') || error.message.includes('401')) {
+      addAIMessage("⚠️ <strong>Clé API invalide :</strong> La clé OpenAI renseignée dans les paramètres n'est pas correcte.");
     } else {
       addAIMessage("Une erreur de connexion s'est produite. Veuillez réessayer.");
     }
@@ -1838,7 +1862,7 @@ function addDeepDiveOptions() {
       grid.querySelectorAll('button').forEach(b => b.disabled = true);
       addUserMessage(opt.label);
       conversation.push({ role: 'user', parts: [{ text: opt.msg }] });
-      callGeminiAPI();
+      callOpenAIAPI();
     });
     grid.appendChild(btn);
   });

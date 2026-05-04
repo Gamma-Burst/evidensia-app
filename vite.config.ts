@@ -11,7 +11,10 @@ export default defineConfig(({mode}) => {
       'process.env.GEMINI_API_KEY': JSON.stringify(
         (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== "MY_GEMINI_API_KEY") 
           ? process.env.GEMINI_API_KEY 
-          : (process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY || "")
+          : (process.env.OPENAI_API_KEY || process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY || "")
+      ),
+      'process.env.OPENAI_API_KEY': JSON.stringify(
+        process.env.OPENAI_API_KEY || process.env.GEMINI_API_KEY || ""
       ),
     },
     resolve: {
