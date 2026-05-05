@@ -4,6 +4,7 @@ const MODEL = process.env.OPENAI_MODEL || "gpt-4.1";
 function getApiKey() {
   return (
     process.env.OPENAI_API_KEY ||
+    process.env.OPENAI_API ||
     process.env.OPEN_AI_API ||
     process.env.OPEN_AI_API_KEY ||
     ""

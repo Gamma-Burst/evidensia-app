@@ -1672,7 +1672,7 @@ En tant qu'expert parfumeur, rédige une belle introduction pour m'expliquer ce 
 // ════════════════════════════════════════════════════════
 async function callOpenAIAPI() {
   if (!CONFIG.API_ENDPOINT) {
-    addAIMessage("⚠️ <strong>Erreur de configuration :</strong> Le point d'appel OpenAI local est introuvable.");
+    addAIMessage("<strong>Erreur de configuration :</strong> Le point d'appel OpenAI local est introuvable.");
     return;
   }
 
@@ -1690,8 +1690,10 @@ async function callOpenAIAPI() {
       })
     });
 
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || "La requÃªte OpenAI a Ã©chouÃ©.");
+    const raw = await response.text();
+    let data = {};
+    try { data = raw ? JSON.parse(raw) : {}; } catch { data = { error: raw }; }
+    if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
 
     const text = data.text;
     conversation.push({ role: 'model', parts: [{ text: text }] });
@@ -1726,16 +1728,13 @@ async function callOpenAIAPI() {
     hideTypingIndicator();
     isTyping = false;
     document.getElementById('sendButton').disabled = false;
-    if (false) {
-      addAIMessage("⚠️ <strong>Erreur OpenAI :</strong> Une erreur de connexion s'est produite. Veuillez réessayer.");
-    } else {
-      addAIMessage("Une erreur de connexion s'est produite. Veuillez réessayer.");
-    }
+    const message = error && error.message
+      ? error.message
+      : "Une erreur de connexion s'est produite. Veuillez reessayer.";
+    addAIMessage(`<strong>Erreur OpenAI :</strong> ${message}`);
     console.error('API Error:', error);
   }
 }
-
-// ════════════════════════════════════════════════════════
 //  OPTIONS D'APPROFONDISSEMENT
 // ════════════════════════════════════════════════════════
 function addDeepDiveOptions() {
