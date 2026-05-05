@@ -1,9 +1,8 @@
-const CACHE_NAME = 'evidensia-v2';
+const CACHE_NAME = 'evidensia-v3';
 const ASSETS = [
   '/',
   '/index.html',
-  '/manifest.json',
-  'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap'
+  '/manifest.json'
 ];
 
 self.addEventListener('install', (event) => {

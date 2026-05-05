@@ -15,7 +15,14 @@ View your app in AI Studio: https://ai.studio/apps/558ccd0c-66b5-4c6e-92ff-1ffcc
 
 1. Install dependencies:
    `npm install`
-2. Set `GEMINI_API_KEY` in [.env.local](.env.local) to your OpenAI API key
-   You can also use `OPENAI_API_KEY`, but `GEMINI_API_KEY` is still supported for backward compatibility.
+2. Set `OPENAI_API_KEY` in `.env.local`
+   `OPEN_AI_API` is also accepted for compatibility with an existing Vercel variable, but `OPENAI_API_KEY` is the preferred name.
 3. Run the app:
    `npm run dev`
+
+## OpenAI setup
+
+- The frontend no longer calls a model provider directly from the browser.
+- Vercel uses `api/chat.js` as a server-side proxy to the OpenAI Responses API.
+- Default model: `gpt-4.1`
+- Optional override: set `OPENAI_MODEL` on Vercel or in `.env.local`
